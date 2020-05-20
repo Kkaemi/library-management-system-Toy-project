@@ -71,14 +71,85 @@ public class SingUpDAO {
             return su;
         
     }
-       
-        
-        
-        
-        
-                
+            
     }
     
+    public int pwUpdate(SingUpDTO singUpDTO) {
+        int su = 0;
+        getConnection();
+        String sql = "update member set pass = ? ,passc = ? where id = ?";
+        
+        try {
+            pstmt = conn.prepareStatement(sql);
+            
+            pstmt.setString(1, singUpDTO.getPass());
+            pstmt.setString(2, singUpDTO.getPassc());
+            pstmt.setString(3, singUpDTO.getId());
+           
+
+            su = pstmt.executeUpdate();
+            
+        } catch (SQLException e) {
+            
+            e.printStackTrace();
+        }finally {
+            
+            try {
+             //   if(rs != null)rs.close();
+                if(pstmt != null) pstmt.close();    //닫아주기 거꾸로
+                if(conn != null) conn.close();
+            } catch (SQLException e) {
+                
+                e.printStackTrace();
+            }
+        
+        }       
+        return su;
+    }
+
+    
+    public int inforUpdate(SingUpDTO singUpDTO) {
+        int su = 0;
+        
+        String sql = "update member set pass = ?,passc = ? ,name = ?, tel1 = ?, tel2 = ?, tel3 = ? where id = ?";
+        System.out.println(singUpDTO.getId());
+     
+        try {
+           
+           getConnection();
+           pstmt = conn.prepareStatement(sql);
+           
+           
+           pstmt.setString(1, singUpDTO.getPass());
+           pstmt.setString(2, singUpDTO.getPassc());
+           pstmt.setString(3, singUpDTO.getName());
+           pstmt.setString(4, singUpDTO.getTel1());
+           pstmt.setString(5, singUpDTO.getTel2());
+           pstmt.setString(6, singUpDTO.getTel3());
+           pstmt.setString(7, singUpDTO.getId());
+
+           
+           su = pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+
+           e.printStackTrace();
+        } finally {
+
+           try {
+              if(rs != null)rs.close();
+              if (pstmt != null)
+                 pstmt.close(); // 닫아주기 거꾸로
+              if (conn != null)
+                 conn.close();
+           } catch (SQLException e) {
+
+              e.printStackTrace();
+           }
+
+        }
+        return su;
+     }
     
     
 }
