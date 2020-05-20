@@ -211,7 +211,7 @@ public class IdFind extends JFrame {
          public void actionPerformed(ActionEvent e) {
             int result = JOptionPane.showConfirmDialog(null, "취소하시겠습니까?", "아이디 찾기", JOptionPane.YES_NO_OPTION);
             if (result == 0) {
-               setVisible(false);
+               new Login();
             }
          }
       });
