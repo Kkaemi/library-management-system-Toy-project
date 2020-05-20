@@ -1,5 +1,6 @@
 package text;
 
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -37,6 +38,7 @@ public class SingUp implements ActionListener, Runnable{
     private JTextField textField;
     private JPasswordField pwT, pwcT;
     private JLabel jlId, jlPass; 
+    private JFrame frame2;
     
     private Thread t;
     
@@ -60,7 +62,7 @@ public class SingUp implements ActionListener, Runnable{
         }    
         
         
-    JFrame frame2 = new JFrame();
+    frame2 = new JFrame();
     frame2.getContentPane().setBackground(Color.WHITE);
     frame2.setBounds(500,200,400,650);
     frame2.getContentPane().setLayout(null);
@@ -176,7 +178,7 @@ public class SingUp implements ActionListener, Runnable{
     phoneL1.setBounds(170, 455, 20, 30);
     frame2.getContentPane().add(phoneL1);
     
-    phoneNumberT = new JTextField("입력");
+    phoneNumberT = new JTextField("");
     phoneNumberT.setBorder(new LineBorder(new Color(209,209,209)));
     phoneNumberT.setColumns(10);
     phoneNumberT.setFont(new Font("맑은 고딕", Font.PLAIN, 16));
@@ -195,7 +197,7 @@ public class SingUp implements ActionListener, Runnable{
     phoneL2.setBounds(245, 455, 20, 30);
     frame2.getContentPane().add(phoneL2);
     
-    phoneNumber2T = new JTextField("입력");
+    phoneNumber2T = new JTextField("");
     phoneNumber2T.setBorder(new LineBorder(new Color(209,209,209)));
     phoneNumber2T.setColumns(10);
     phoneNumber2T.setFont(new Font("맑은 고딕", Font.PLAIN, 16));
@@ -305,7 +307,7 @@ public class SingUp implements ActionListener, Runnable{
                 System.out.println(su+"명 등록 되었습니다.");
                 
                 JOptionPane.showMessageDialog(null,"회원가입이 완료되었습니다.","회원가입",JOptionPane.INFORMATION_MESSAGE);
-                new Login();
+                frame2.setVisible(false);
             }
             
                    
