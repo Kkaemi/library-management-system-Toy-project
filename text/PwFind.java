@@ -21,40 +21,44 @@ public class PwFind extends JFrame {
    private JPanel panel;
    private JTextField nameT, idT, phoneT1, phoneT2;
    private JComboBox<String> combo;
-   
+
    String driver = "oracle.jdbc.driver.OracleDriver";
    private String url = "jdbc:oracle:thin:@localhost:1521:xe";
    private String username = "c##java";
    private String password = "bit";
 
-      private Connection conn;
-      private PreparedStatement pstmt;
-      private ResultSet rs;
+   private Connection conn;
+   private PreparedStatement pstmt;
+   private ResultSet rs;
+   
+   
+   
 
+   
    public PwFind() {
-       try { // "OracleDriver.class" 생성
-            Class.forName(driver);// 파일을 클레스 타입으로 생성 모든 파일 경로를 표시해야함
-            System.out.println("드라이버 로딩 성공");
-         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-         }
+      try { // "OracleDriver.class" 생성
+         Class.forName(driver);// 파일을 클레스 타입으로 생성 모든 파일 경로를 표시해야함
+         System.out.println("드라이버 로딩 성공");
+      } catch (ClassNotFoundException e) {
+         e.printStackTrace();
+      }
       getContentPane().setBackground(Color.WHITE);
-      
+
       JLabel imgL = new JLabel(new ImageIcon("icon\\pw.png"));
       imgL.setBounds(40, 175, 30, 30);
       getContentPane().add(imgL);
-   
-   JLabel lblNewLabel_1 = new JLabel("패스워드 찾기");
-   lblNewLabel_1.setBounds(80, 185, 130, 18);
-   lblNewLabel_1.setFont(new Font("맑은 고딕", Font.BOLD, 18));
-   getContentPane().add(lblNewLabel_1);
+
+      JLabel lblNewLabel_1 = new JLabel("패스워드 찾기");
+      lblNewLabel_1.setBounds(80, 185, 130, 18);
+      lblNewLabel_1.setFont(new Font("맑은 고딕", Font.BOLD, 18));
+      getContentPane().add(lblNewLabel_1);
 
       nameL = new JLabel("이    름");
       nameL.setBounds(70, 220, 70, 33);
       nameL.setFont(new Font("맑은 고딕", Font.BOLD, 17));
       nameL.setHorizontalAlignment(SwingConstants.CENTER);
       getContentPane().add(nameL);
-      
+
       nameT = new JTextField(" 이름을 입력해주세요.");
       nameT.setFont(new Font("함초롬돋움", Font.PLAIN, 16));
       nameT.setColumns(10);
@@ -103,11 +107,11 @@ public class PwFind extends JFrame {
       combo = new JComboBox(phone);
       combo.setBounds(100, 405, 55, 30);
       getContentPane().add(combo);
-      
+
       phoneL1 = new JLabel("-");
       phoneL1.setBounds(170, 405, 20, 30);
       getContentPane().add(phoneL1);
-      
+
       phoneT1 = new JTextField("번호");
       phoneT1.setColumns(5);
       phoneT1.setFont(new Font("맑은 고딕", Font.PLAIN, 16));
@@ -123,11 +127,10 @@ public class PwFind extends JFrame {
             phoneT1.setText("");
          }
       });
-      
+
       phoneL2 = new JLabel("-");
       phoneL2.setBounds(240, 405, 20, 30);
       getContentPane().add(phoneL2);
-      
 
       phoneT2 = new JTextField("입력");
       phoneT2.setColumns(5);
@@ -144,12 +147,13 @@ public class PwFind extends JFrame {
             phoneT2.setText("");
          }
       });
-      
+
       okBtn = new JButton("확인");
       okBtn.setBounds(80, 465, 100, 40);
       okBtn.setFont(new Font("맑은 고딕", Font.BOLD, 22));
-      okBtn.setBorderPainted(false);//-------------------------버튼 테두리 지움 
+      okBtn.setBorderPainted(false);// -------------------------버튼 테두리 지움
       getContentPane().add(okBtn);
+      setVisible(false);
       okBtn.addActionListener(new ActionListener() {
          public void actionPerformed(ActionEvent e) {
             getConnection();
@@ -159,33 +163,30 @@ public class PwFind extends JFrame {
                pstmt = conn.prepareStatement(sql);
                rs = pstmt.executeQuery();
 
-               int sw =0;
+               int sw = 0;
                while (rs.next()) {
-                  System.out.println(nameT.getText() + "," + idT.getText() + "," + combo.getSelectedItem() + "," + phoneT1.getText()
-                        + "," + phoneT2.getText());
-                  System.out.println(rs.getString("pass"));
-                  if (nameT.getText().equals("")) {
-                     JOptionPane.showMessageDialog(null, "정보를 입력해주세요 .", "아이디 찾기", JOptionPane.ERROR_MESSAGE);
-                     return;//돌아가
-                  } else if (rs.getString("id").equals(idT.getText())
-                        && rs.getString("name").equals(nameT.getText())
-                        && rs.getString("tel1").equals(combo.getSelectedItem())
-                        && rs.getString("tel2").equals(phoneT1.getText())
-                        && rs.getString("tel3").equals(phoneT2.getText())) {
-                     JOptionPane.showMessageDialog(null,
-                           "    " + rs.getString("name") + "님의 비밀번호는 " + rs.getString("pass") + " 입니다.",
-                           "비밀번호 찾기", JOptionPane.PLAIN_MESSAGE);
-                     sw=1;// 정보가  들어왔으니 1,
+                  if (nameT.getText().equals("") || nameT.getText().length() == 0) {
+                     JOptionPane.showMessageDialog(null, " 정보를 입력해주세요.", "비밀번호 찾기", JOptionPane.ERROR_MESSAGE);
+                     return;// 돌아가
                      
-                     new Login();
+                  }  else if(rs.getString("id").equals(idT.getText())
+                              && rs.getString("name").equals(nameT.getText())
+                              && rs.getString("tel1").equals((String)combo.getSelectedItem())
+                              && rs.getString("tel2").equals(phoneT1.getText())
+                              && rs.getString("tel3").equals(phoneT2.getText())) {
+                     sw = 1;
+                     new NewPw(PwFind.this).setId(idT.getText());
+                     
                      break;
                   }
+            
                }
-
-               if(sw==0)JOptionPane.showMessageDialog(null, "잘못입력하셨습니다.", "비밀번호 찾기", JOptionPane.YES_NO_OPTION);
-
-            } catch (SQLException e1) {
-
+            
+               if (sw == 0)
+                  JOptionPane.showMessageDialog(null, "잘못입력하셨습니다.", "비밀번호 찾기", JOptionPane.YES_NO_OPTION);
+               
+               
+            }catch (SQLException e1) {
                e1.printStackTrace();
             } finally {
 
@@ -200,36 +201,30 @@ public class PwFind extends JFrame {
 
                   e2.printStackTrace();
                }
-
             }
-
          }
+
       });
 
-      
       cancelBtn = new JButton("취소");
       cancelBtn.setBounds(210, 465, 100, 40);
       cancelBtn.setFont(new Font("맑은 고딕", Font.BOLD, 22));
       cancelBtn.setBorderPainted(false);
       getContentPane().add(cancelBtn);
-      okBtn.setBorderPainted(false);//-------------------------버튼 테두리 지움 
       cancelBtn.addActionListener(new ActionListener() {
-             public void actionPerformed(ActionEvent e) {
-                int result = JOptionPane.showConfirmDialog(null, 
-                      "취소하시겠습니까?", "비밀번호 찾기",
-                            JOptionPane.YES_NO_OPTION);
-                if(result == 0) {
-                   new Main();
-                }
-             }
-          });
+         public void actionPerformed(ActionEvent e) {
+            int result = JOptionPane.showConfirmDialog(null, "취소하시겠습니까?", "비밀번호 찾기", JOptionPane.YES_NO_OPTION);
+            if (result == 0) {
+               new Main();
+            }
+         }
+      });
       JPanel panel_1 = new JPanel();
       panel_1.setLayout(null);
       panel_1.setBackground(new Color(176, 224, 230));
       panel_1.setBounds(0, 547, 384, 56);
       getContentPane().add(panel_1);
-      
-      
+
       getContentPane().setLayout(null);
 
       panel = new JPanel();
@@ -250,15 +245,16 @@ public class PwFind extends JFrame {
       setVisible(true);
 
    }// PwFind
+
    public void getConnection() {
-         try {
-            conn = DriverManager.getConnection(url, username, password);// url 주소 ,오라클 아이디 , 오라클 비번
-            System.out.println("접속 성공");
+      try {
+         conn = DriverManager.getConnection(url, username, password);// url 주소 ,오라클 아이디 , 오라클 비번
+         System.out.println("접속 성공");
 
-         } catch (SQLException e) {
+      } catch (SQLException e) {
 
-            e.printStackTrace();
-         }
+         e.printStackTrace();
       }
-  
+   }
+
 }
