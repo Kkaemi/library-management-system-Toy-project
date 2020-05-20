@@ -1,5 +1,6 @@
 package text;
 
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Rectangle;
@@ -19,28 +20,27 @@ import java.awt.BorderLayout;
 public class Member extends JFrame {
     private JPanel panel1, panel2;
     private JLabel titleL, imgL, updateImg, updateL, btnImg, btnL;
-    private JTextField nameT, idT, phoneT;
+    private JTextField nameT, idT, tel1, tel2, tel3;
     private JButton updateBtn,  btn2;
+    private MemberDAO memberDAO = new MemberDAO();
+    private MemberDTO memberDTO = new MemberDTO();
+    private JLabel idL, nameL;
+    private String id;
+    private JLabel lblNewLabel;
+    private JLabel label;
     
-    String driver = "oracle.jdbc.driver.OracleDriver";
-       private String url = "jdbc:oracle:thin:@localhost:1521:xe";
-       private String username = "c##java";
-       private String password = "bit";
-
-       private Connection conn;
-       private PreparedStatement pstmt;
-       private ResultSet rs;
+    
+    
       
 
     public Member() {
         
-        try { // "OracleDriver.class" 생성
-             Class.forName(driver);// 파일을 클레스 타입으로 생성 모든 파일 경로를 표시해야함
-             System.out.println("드라이버 로딩 성공");
-          } catch (ClassNotFoundException e) {
-             e.printStackTrace();
-          }
-        //-------------------------------------------------------------------------
+        id = JOptionPane.showInputDialog(this, "아이디를 입력하세요");
+        
+        memberDTO = new MemberDTO();
+        memberDTO.setId(id);
+        
+        
         panel1 = new JPanel();
         panel1.setBackground(new Color(176, 224, 230));
         panel1.setBounds(0, 0, 382, 145);
@@ -63,28 +63,64 @@ public class Member extends JFrame {
         imgL.setBounds(40,190,129,121);
         getContentPane().add(imgL);
         
-        nameT = new JTextField("이름");
-        nameT.setFont(new Font("맑은 고딕", Font.BOLD, 17));
-        nameT.setColumns(10);
-        nameT.setBorder(new EmptyBorder(0, 0, 0, 0));
-        nameT.setBounds(200, 190, 140, 30);
-        getContentPane().add(nameT);
-        
-        
-        idT = new JTextField("아이디");
+        idT = new JTextField();
+        idT.setForeground(Color.GRAY);
         idT.setFont(new Font("맑은 고딕", Font.BOLD, 17));
         idT.setColumns(10);
         idT.setBorder(new EmptyBorder(0, 0, 0, 0));
-        idT.setBounds(200, 230, 140, 30);
+        idT.setBounds(240, 190, 95, 30);
+     //   idT.setText(memberDTO.getId());
         getContentPane().add(idT);
         
         
-        phoneT = new JTextField("연락처");
-        phoneT.setFont(new Font("맑은 고딕", Font.BOLD, 17));
-        phoneT.setColumns(10);
-        phoneT.setBorder(new EmptyBorder(0, 0, 0, 0));
-        phoneT.setBounds(200, 270, 140, 30);
-        getContentPane().add(phoneT);
+        nameT = new JTextField();
+        nameT.setForeground(Color.GRAY);
+        nameT.setFont(new Font("맑은 고딕", Font.BOLD, 17));
+        nameT.setColumns(10);
+        nameT.setBorder(new EmptyBorder(0, 0, 0, 0));
+        nameT.setBounds(240, 230, 95, 30);
+        getContentPane().add(nameT);
+        
+        tel1 = new JTextField();
+        tel1.setForeground(Color.GRAY);
+        tel1.setText((String) null);
+        tel1.setFont(new Font("맑은 고딕", Font.BOLD, 17));
+        tel1.setColumns(10);
+        tel1.setBorder(new EmptyBorder(0, 0, 0, 0));
+        tel1.setBounds(178, 270, 40, 30);
+        getContentPane().add(tel1);
+        
+        
+        label = new JLabel("-");
+        label.setForeground(Color.GRAY);
+        label.setFont(new Font("맑은 고딕", Font.BOLD, 16));
+        label.setBounds(230, 270, 17, 30);
+        getContentPane().add(label);
+              
+        tel2 = new JTextField();
+        tel2.setForeground(Color.GRAY);
+        tel2.setFont(new Font("맑은 고딕", Font.BOLD, 17));
+        tel2.setColumns(10);
+        tel2.setBorder(new EmptyBorder(0, 0, 0, 0));
+        tel2.setBounds(250, 270, 40, 30);
+        getContentPane().add(tel2);
+        
+        lblNewLabel = new JLabel("-");
+        lblNewLabel.setForeground(Color.GRAY);
+        lblNewLabel.setFont(new Font("맑은 고딕", Font.BOLD, 16));
+        lblNewLabel.setBounds(303, 270, 17, 30);
+        getContentPane().add(lblNewLabel);
+        
+        tel3 = new JTextField();
+        tel3.setForeground(Color.GRAY);
+        tel3.setFont(new Font("맑은 고딕", Font.BOLD, 17));
+        tel3.setColumns(10);
+        tel3.setBorder(new EmptyBorder(0, 0, 0, 0));
+        tel3.setBounds(320, 270, 40, 30);
+        getContentPane().add(tel3);
+        
+       
+       
         
         //-------------------------------------------------------------------------
         
@@ -100,13 +136,14 @@ public class Member extends JFrame {
         updateBtn = new JButton("    비밀번호 등 내정보를 변경하세요.");
         updateBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new InformationModify();
+                new InformationModify(idT.getText());
+
             }
         });
         updateBtn.setBackground(Color.GRAY);
         updateBtn.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
         updateBtn.setContentAreaFilled(false);// 배경지우는거 ( 버튼 눌렀을떄, 주변에 색들어가는거 지움)
-        //updateBtn.setBorderPainted(false);//-------------------------버튼 테두리 지움 
+        updateBtn.setBorderPainted(false);//-------------------------버튼 테두리 지움 
         updateBtn.setFocusPainted(false);// 클릭했을떄 선 지움
         updateBtn.setBounds(0, 365, 382, 90);
         getContentPane().add(updateBtn);
@@ -120,6 +157,18 @@ public class Member extends JFrame {
         btnL.setBounds(93, 470, 117, 30);
         getContentPane().add(btnL);
         
+        idL = new JLabel(" I  D : ");
+        idL.setForeground(Color.GRAY);
+        idL.setFont(new Font("맑은 고딕", Font.BOLD, 17));
+        idL.setBounds(181, 190, 55, 30);
+        getContentPane().add(idL);
+        
+        nameL = new JLabel("이 름 : ");
+        nameL.setForeground(Color.GRAY);
+        nameL.setFont(new Font("맑은 고딕", Font.BOLD, 16));
+        nameL.setBounds(181, 230, 55, 30);
+        getContentPane().add(nameL);
+        
         btn2 = new JButton("          더 이상 이용하지 않을 경우 진행해주세요.");
         btn2.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
         btn2.setBorder(new EmptyBorder(0, 0, 0, 0));
@@ -129,39 +178,41 @@ public class Member extends JFrame {
         btn2.setBounds(0, 470, 382, 70);
         btn2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-               String passWord = JOptionPane.showInputDialog(null,"탈퇴하시려면 비밀번호를 입력하세요","회원 탈퇴");
-               
-               
-               
+               new MemberWithdrawal();
+      
             }
          });
         getContentPane().add(btn2);
         getContentPane().setLayout(null);
+        //------------------------------------------------------------------------- 회원 정보 불러오기
         
+        
+        memberDTO = memberDAO.memberSearch(memberDTO);
+        
+        idT.setText(memberDTO.getId());
+        nameT.setText(memberDTO.getName());
+        tel1.setText(memberDTO.getTel1());
+        tel2.setText(memberDTO.getTel2());
+        tel3.setText(memberDTO.getTel3());
         
         
         //-------------------------------------------------------------------------
         
         getContentPane().setBackground(Color.WHITE);
         setTitle("회원정보");
-        setVisible(true);
+        if(memberDTO.getName() == null) {
+            setVisible(false);
+        }else {
+            
+            setVisible(true);
+        }
         setBounds(500, 200, 400, 650);
         getContentPane().setLayout(null);
-
+        
+    
+        
 
     }//Member()
-    public void getConnection() {
-          try {
-             conn = DriverManager.getConnection(url, username, password);// url 주소 ,오라클 아이디 , 오라클 비번
-             System.out.println("접속 성공");
 
-          } catch (SQLException e) {
-
-             e.printStackTrace();
-          }
-       }
-    public static void main(String[] args) {
-        new Member();
-    }
+   
 }
-
